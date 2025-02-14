@@ -2,9 +2,20 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
+import { cookies } from "next/headers";
+import { jwtDecode } from "jwt-decode";
+import { COOKIE_TOKEN_NAME } from "@/middleware";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import Cookies from "js-cookie";
 
 const DropdownUser = () => {
+  const currentUser = useCurrentUser()
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleSignOut = () => {
+    Cookies.remove(COOKIE_TOKEN_NAME)
+    window.location.assign("/login")
+  }
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -15,19 +26,20 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {currentUser.nickname}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{currentUser.email}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
           <Image
             width={112}
             height={112}
-            src={"/images/user/user-01.png"}
+            src={currentUser.picture}
             style={{
               width: "auto",
               height: "auto",
+              borderRadius: '100%'
             }}
             alt="User"
           />
@@ -55,7 +67,7 @@ const DropdownUser = () => {
         <div
           className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
         >
-          <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+          {/* <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
             <li>
               <Link
                 href="/profile"
@@ -127,8 +139,8 @@ const DropdownUser = () => {
                 Account Settings
               </Link>
             </li>
-          </ul>
-          <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          </ul> */}
+          <button onClick={handleSignOut} className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
             <svg
               className="fill-current"
               width="22"
@@ -146,7 +158,7 @@ const DropdownUser = () => {
                 fill=""
               />
             </svg>
-            Log Out
+            Sair
           </button>
         </div>
       )}

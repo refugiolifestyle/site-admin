@@ -5,6 +5,8 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/configs/firebase";
 
 export default function RootLayout({
   children,
@@ -21,9 +23,9 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <div className="dark:bg-boxdark-2 dark:text-bodydark">
+    <html className="min-h-screen w-full" lang="en">
+      <body className="min-h-screen w-full" suppressHydrationWarning={true}>
+        <div className="dark:bg-boxdark-2 dark:text-bodydark min-h-screen w-full">
           {loading ? <Loader /> : children}
         </div>
       </body>
